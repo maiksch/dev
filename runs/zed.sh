@@ -1,3 +1,1 @@
-#/bin/sh
-
-curl -f https://zed.dev/install.sh | sh
+sudo pacman -S --noconfirm zed

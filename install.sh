@@ -20,7 +20,7 @@ pushd ./runs
 
 # -t defines the target directory, so where the symlinks should be created
 # -DS means, stow should first delete old symlinks and then create new ones from the given stow directory
-#stow -t ~ -DS configs
+stow -t ~ -DS configs
 
 #stow -t ~/.config -DS config
 

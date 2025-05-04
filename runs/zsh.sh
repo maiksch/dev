@@ -1,9 +1,6 @@
 #/bin/sh
 
-sudo apt install zsh -y
-
-# set zsh as default shell
-chsh -s $(which zsh) $(whoami)
+sudo pacman -S --noconfirm zsh
 
 # install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc -y

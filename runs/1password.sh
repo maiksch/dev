@@ -1,10 +1,13 @@
-sudo apt install gnupg2 -y
+echo "Installing 1password"
 
-wget https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb
+yay -S --noconfirm 1password
 
-sudo dpkg -i 1password-latest.deb
+if [ $? -eq 0 ]; then
+	echo "ok"
+else
+	echo "error"
+	exit 1
+fi
 
-rm 1password-latest.deb
-
-mkdir ~/.ssh
-echo "Host *\n\tIdentityAgent ~/.1password/agent.sock" >> ~/.ssh/config
+mkdir -p ~/.ssh
+#echo "Host *\n\tIdentityAgent ~/.1password/agent.sock" >> ~/.ssh/config
