@@ -1,0 +1,37 @@
+[
+  {
+    "bindings": {
+      "cmd-e": "workspace::ToggleLeftDock",
+      "cmd-g": "editor::ToggleGitBlame",
+      "cmd-;": "zed::OpenKeymap",
+      "cmd-alt-o": "workspace::Open",
+      "cmd-o": ["projects::OpenRecent", { "create_new_window": true }],
+      "ctrl-p": "file_finder::Toggle",
+      "cmd-p": null
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "f2": "project_panel::Rename"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-7": "editor::ToggleComments",
+      "cmd-7": null,
+      "f8": "editor::GoToDiagnostic",
+      "shift-f8": "editor::GoToPrevDiagnostic"
+    }
+  },
+  {
+    "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+    "bindings": {
+      "shift-k": "editor::Hover",
+      "alt-k": "editor::MoveLineUp",
+      "alt-j": "editor::MoveLineDown",
+      "space f": "editor::Format"
+    }
+  }
+]
