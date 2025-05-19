@@ -21,31 +21,39 @@ config.colors = {
 }
 -- font
 config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
--- disable tab bar
 config.enable_tab_bar = true
 -- disable font ligatures
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 
+config.leader = { key = "b", mods = "CTRL", timeout_milliseconds = 1000 }
+
+local act = wezterm.action
+
 config.keys = {
 	{
-		mods = "CTRL|SHIFT",
-		key = "i",
+		mods = "LEADER",
+		key = "o",
 		action = wezterm.action_callback(function(window, pane)
+			local choices = { { label = "default", id = "~" } }
 			local projects = wezterm.home_dir .. "/" .. "Projects"
 
-			local choices = {
-				{ label = "Core", id = projects .. "/core" },
-				{ label = "App Platform", id = projects .. "/vi-app-platform" },
-			}
+			for _, path in ipairs(wezterm.read_dir(projects)) do
+				local label = path:match("[^/\\]*$")
 
-			--local res = io.popen("find ~/Projects -mindepth 1 -maxdepths 1 -type d | sort -r")
-			--local text = res:read("*a")
-			--wezterm.log_info(text)
-			--res:close()
+				if label ~= ".DS_STORE" then
+					table.insert(choices, { label = label, id = path })
+				end
+			end
+
+			table.sort(choices, function(a, b)
+				return a.label < b.label
+			end)
 
 			window:perform_action(
 				wezterm.action.InputSelector({
 					action = wezterm.action_callback(function(window, pane, id, label)
+						local current_workspace = window:active_workspace()
+
 						window:perform_action(
 							wezterm.action.SwitchToWorkspace({
 								name = label,
@@ -56,6 +64,8 @@ config.keys = {
 							}),
 							pane
 						)
+
+						wezterm.GLOBAL.previous_workspace = current_workspace
 					end),
 					title = "Chose Workspace",
 					fuzzy_description = "Fuzzy find Workspace: ",
@@ -65,23 +75,64 @@ config.keys = {
 				pane
 			)
 		end),
+	},
+	{
+		mods = "LEADER",
+		key = "b",
+		action = wezterm.action_callback(function(window, pane)
+			local previous_workspace = wezterm.GLOBAL.previous_workspace
+			local current_workspace = window:active_workspace()
 
-		--if [ -z $1 ]; then
-		--locations=$(find ~/Projects -mindepth 1 -maxdepth 1 -type d | sort -r)
-		--session=$(echo "$locations" | fzf) # use fzf to show all possible locations
-		--session_name=$(basename "$session" | tr . _) # remove file endings. remove dir path. replace . with _
-		--else
-		--session=$(find ~/Projects -mindepth 1 -maxdepth 1 -type d -name $1)
-		--session_name=$(echo $1 | tr . _)
-		--echo $session_name
-		--fi
+			window:perform_action(wezterm.action.SwitchToWorkspace({ name = previous_workspace }), pane)
 
-		--if ! tmux has-session -t "$session_name" &> /dev/null; then
-		--tmux new-session -s "$session_name" -c "$session" -d
-		--fi
-
-		--tmux switch-client -t "$session_name"
+			wezterm.GLOBAL.previous_workspace = current_workspace
+		end),
+	},
+	{
+		mods = "LEADER",
+		key = "t",
+		action = wezterm.action.SpawnTab("DefaultDomain"),
+	},
+	{
+		key = "p",
+		mods = "LEADER",
+		action = wezterm.action.ActivateCommandPalette,
+	},
+	{
+		mods = "LEADER",
+		key = "d",
+		action = wezterm.action_callback(function(window, pane)
+			open_workspace(window, pane, {
+				name = "lazydocker",
+				cwd = "/Users/mschmaddebeck/",
+				--args = { "lazydocker" },
+			})
+		end),
 	},
 }
+
+function open_workspace(window, pane, opts)
+	local current_workspace = window:active_workspace()
+	window:perform_action(
+		wezterm.action.SwitchToWorkspace({
+			name = opts.name,
+			spawn = {
+				label = "Workspace: " .. opts.name,
+				cwd = opts.cwd,
+				args = opts.args,
+			},
+		}),
+		pane
+	)
+	wezterm.GLOBAL.previous_workspace = current_workspace
+end
+
+for i = 1, 8 do
+	table.insert(config.keys, {
+		key = tostring(i),
+		mods = "LEADER",
+		action = act.ActivateTab(i - 1),
+	})
+end
 
 return config
