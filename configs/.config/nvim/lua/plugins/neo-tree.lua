@@ -1,6 +1,13 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   opts = function(_, opts)
+    opts.filesystem = opts.filesystem or {}
+    opts.filesystem = {
+      filtered_items = {
+        visible = true,
+      },
+    }
+
     opts.window = opts.window or {}
     opts.window.position = "float"
     opts.window.popup = {

@@ -13,12 +13,13 @@ end
 -- this is where you actually apply your config choices
 
 -- colorscheme
-config.color_scheme = "Monokai Pro (Gogh)"
-config.colors = {
-	background = "#282828",
-	cursor_fg = "#19181A",
-	cursor_bg = "#FBF1C7",
-}
+--config.color_scheme = "Monokai Pro (Gogh)"
+config.color_scheme = "Monokai (light) (terminal.sexy)"
+-- config.colors = {
+-- 	background = "#282828",
+-- 	cursor_fg = "#19181A",
+-- 	cursor_bg = "#FBF1C7",
+-- }
 -- font
 config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
 config.enable_tab_bar = true
@@ -104,8 +105,28 @@ config.keys = {
 		action = wezterm.action_callback(function(window, pane)
 			open_workspace(window, pane, {
 				name = "lazydocker",
-				cwd = "/Users/mschmaddebeck/",
+				cwd = "/Users/mschmaddebeck/Projects/local-env/",
 				--args = { "lazydocker" },
+			})
+		end),
+	},
+	{
+		key = "c",
+		mods = "LEADER|SHIFT",
+		action = wezterm.action_callback(function(window, pane)
+			open_workspace(window, pane, {
+				name = "core",
+				cwd = "/Users/mschmaddebeck/Projects/core/",
+			})
+		end),
+	},
+	{
+		key = "p",
+		mods = "LEADER|SHIFT",
+		action = wezterm.action_callback(function(window, pane)
+			open_workspace(window, pane, {
+				name = "vi-app-platform",
+				cwd = "/Users/mschmaddebeck/Projects/vi-app-platform/",
 			})
 		end),
 	},
